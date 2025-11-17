@@ -241,6 +241,46 @@ Ejemplo de salida:
 
 ---
 
+## Docker
+
+### 1. Construir la imagen
+
+docker build -t mlops-team6/ml-service:latest .
+
+### 2. Ejecutar el contenedor
+
+docker run -p 8000:8000 mlops-team6/ml-service:latest
+
+La API estará disponible en:
+
+http://localhost:8000
+
+---
+
+## Dockerfile
+
+FROM python:3.12-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+ build-essential \
+ && rm -rf /var/lib/apt/lists/\*
+
+WORKDIR /app
+
+COPY requirements.txt .
+
+RUN pip install --upgrade pip && \
+ pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+EXPOSE 8000
+
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+
 ## 🏷 Versión de la API
 
 ```
